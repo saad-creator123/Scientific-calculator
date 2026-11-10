@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Scientific Calculator</title>
+  <meta name="description" content="Clean, modern, responsive scientific calculator with haptics, click sounds, accurate trigonometry, calculation history, and keyboard shortcuts.">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2338BDF8'><path d='M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z'/></svg>">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="brand-section">
+        <div class="brand-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+            <line x1="8" y1="6" x2="16" y2="6"></line>
+            <line x1="16" y1="14" x2="16" y2="18"></line>
+            <path d="M16 10h.01"></path>
+            <path d="M12 10h.01"></path>
+            <path d="M8 10h.01"></path>
+            <path d="M12 14h.01"></path>
+            <path d="M8 14h.01"></path>
+            <path d="M12 18h.01"></path>
+            <path d="M8 18h.01"></path>
+          </svg>
+        </div>
+        <h1 class="brand-title">Scientific Calculator</h1>
+      </div>
+
+      <div class="header-controls">
+        <!-- DEG / RAD Switcher -->
+        <button id="btnAngleMode" class="mode-toggle-switch" title="Toggle Angle Mode (DEG/RAD)" aria-label="Toggle Angle Mode">
+          <span class="mode-deg active">DEG</span>
+          <span class="mode-rad">RAD</span>
+        </button>
+
+        <!-- Theme Toggle (Prominently Placed) -->
+        <button id="btnThemeToggle" class="icon-btn theme-toggle-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Theme">
+          <span id="themeIcon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <span class="theme-label-text" id="themeLabelText">Theme</span>
+        </button>
+
+        <!-- Sound / Haptics Toggle -->
+        <button id="btnSoundToggle" class="icon-btn active" title="Toggle Sound & Haptics" aria-label="Toggle Sound">
+          <span id="soundIcon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </span>
+        </button>
+
+        <!-- History Drawer Button -->
+        <button id="btnHistoryToggle" class="icon-btn" title="Calculation History (H)" aria-label="Open History">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </button>
+
+        <!-- Keyboard Shortcuts Info -->
+        <button id="btnInfoModal" class="icon-btn" title="Keyboard Shortcuts" aria-label="Keyboard Shortcuts">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+      <!-- Calculator Body -->
+      <section class="calculator-container" aria-label="Scientific Calculator">
+        
+        <!-- Display Screen -->
+        <div class="calc-display" id="calcDisplay">
+          <div class="display-meta">
+            <div class="display-badges">
+              <span class="badge badge-mode" id="angleModeBadge">DEG</span>
+              <span class="badge badge-memory" id="memoryBadge">M</span>
+            </div>
+            <div class="display-copy-hint" title="Click answer to copy">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Copy</span>
+            </div>
+          </div>
+          
+          <!-- Secondary calculation / formula line -->
+          <div class="secondary-line" id="secondaryDisplay" aria-live="polite"></div>
+          
+          <!-- Live result preview line -->
+          <div class="preview-line" id="evalPreview"></div>
+
+          <!-- Primary main numeral line -->
+          <div class="primary-line" id="primaryDisplay" title="Click to copy value" tabindex="0">0</div>
+        </div>
+
+        <!-- Mobile Filter Tabs (Visible on small screens) -->
+        <div class="mobile-view-tabs" id="mobileTabs">
+          <button class="view-tab-btn active" data-tab="all">All</button>
+          <button class="view-tab-btn" data-tab="basic">Basic (123)</button>
+          <button class="view-tab-btn" data-tab="sci">Scientific f(x)</button>
+        </div>
+
+        <!-- Keypad Area -->
+        <div class="calc-keypad">
+          
+          <!-- Memory Bar -->
+          <div class="memory-bar">
+            <button class="btn-mem" data-action="mem-clear" title="Clear Memory (MC)">MC</button>
+            <button class="btn-mem" data-action="mem-recall" title="Recall Memory (MR)">MR</button>
+            <button class="btn-mem" data-action="mem-add" title="Add to Memory (M+)">M+</button>
+            <button class="btn-mem" data-action="mem-sub" title="Subtract from Memory (M-)">M−</button>
+          </div>
+
+          <!-- Keypad Grid Wrapper -->
+          <div class="keypad-grid-wrapper">
+            
+            <!-- Scientific Functions Keypad -->
+            <div class="keypad-scientific" id="keypadSci">
+              <!-- Row 1 -->
+              <button class="calc-btn btn-sci btn-shift" id="btnShift" title="Toggle 2nd Functions">2nd</button>
+              <button class="calc-btn btn-sci" data-action="reciprocal" title="Reciprocal 1/x">1/x</button>
+              <button class="calc-btn btn-sci" data-value="sin(" data-shift-value="asin(" data-normal-label="sin" data-shift-label="sin⁻¹" title="Sine">sin</button>
+              <button class="calc-btn btn-sci" data-value="cos(" data-shift-value="acos(" data-normal-label="cos" data-shift-label="cos⁻¹" title="Cosine">cos</button>
+
+              <!-- Row 2 -->
+              <button class="calc-btn btn-sci" data-value="tan(" data-shift-value="atan(" data-normal-label="tan" data-shift-label="tan⁻¹" title="Tangent">tan</button>
+              <button class="calc-btn btn-sci" data-value="ln(" data-shift-value="e^(" data-normal-label="ln" data-shift-label="eˣ" title="Natural Logarithm">ln</button>
+              <button class="calc-btn btn-sci" data-value="log(" data-shift-value="10^(" data-normal-label="log" data-shift-label="10ˣ" title="Logarithm Base 10">log</button>
+              <button class="calc-btn btn-sci" data-value="^" title="Power (xʸ)">xʸ</button>
+
+              <!-- Row 3 -->
+              <button class="calc-btn btn-sci" data-value="√(" data-shift-value="∛(" data-normal-label="√" data-shift-label="∛" title="Square Root">√</button>
+              <button class="calc-btn btn-sci" data-action="square" title="Square (x²)">x²</button>
+              <button class="calc-btn btn-sci" data-value="π" title="Pi (3.14159...)">π</button>
+              <button class="calc-btn btn-sci" data-value="e" title="Euler's Number e">e</button>
+
+              <!-- Row 4 -->
+              <button class="calc-btn btn-sci" data-value="!" title="Factorial (n!)">n!</button>
+              <button class="calc-btn btn-sci" data-value="abs(" title="Absolute Value">|x|</button>
+              <button class="calc-btn btn-sci" data-value="(" title="Open Parenthesis">(</button>
+              <button class="calc-btn btn-sci" data-value=")" title="Close Parenthesis">)</button>
+
+              <!-- Row 5 -->
+              <button class="calc-btn btn-sci" data-action="ans" title="Last Answer (Ans)">Ans</button>
+              <button class="calc-btn btn-sci" data-value="10^(" title="Power of 10 (10ˣ)">10ˣ</button>
+              <button class="calc-btn btn-sci" data-value="e^(" title="Exponential (eˣ)">eˣ</button>
+              <button class="calc-btn btn-sci" data-value="∛(" data-shift-value="^3" data-normal-label="∛" data-shift-label="x³" title="Cube Root (∛) / Cube (x³)">∛</button>
+            </div>
+
+            <!-- Basic & Numeric Keypad -->
+            <div class="keypad-basic" id="keypadBasic">
+              <!-- Row 1 -->
+              <button class="calc-btn btn-clear" data-action="clear" title="All Clear (Esc)">AC</button>
+              <button class="calc-btn btn-del" data-action="delete" title="Delete Last Character (Backspace)">DEL</button>
+              <button class="calc-btn btn-op" data-value="%" title="Percentage">%</button>
+              <button class="calc-btn btn-op" data-value="÷" title="Divide (/)">÷</button>
+
+              <!-- Row 2 -->
+              <button class="calc-btn btn-num" data-value="7">7</button>
+              <button class="calc-btn btn-num" data-value="8">8</button>
+              <button class="calc-btn btn-num" data-value="9">9</button>
+              <button class="calc-btn btn-op" data-value="×" title="Multiply (*)">×</button>
+
+              <!-- Row 3 -->
+              <button class="calc-btn btn-num" data-value="4">4</button>
+              <button class="calc-btn btn-num" data-value="5">5</button>
+              <button class="calc-btn btn-num" data-value="6">6</button>
+              <button class="calc-btn btn-op" data-value="−" title="Subtract (-)">−</button>
+
+              <!-- Row 4 -->
+              <button class="calc-btn btn-num" data-value="1">1</button>
+              <button class="calc-btn btn-num" data-value="2">2</button>
+              <button class="calc-btn btn-num" data-value="3">3</button>
+              <button class="calc-btn btn-op" data-value="+" title="Add (+)">+</button>
+
+              <!-- Row 5 -->
+              <button class="calc-btn btn-num" data-action="toggle-sign" title="Toggle Positive/Negative (±)">±</button>
+              <button class="calc-btn btn-num" data-value="0">0</button>
+              <button class="calc-btn btn-num" data-value="." title="Decimal Point">.</button>
+              <button class="calc-btn btn-equals" data-action="calculate" title="Calculate (= / Enter)">=</button>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- Docked / Slide-out Calculation History -->
+      <aside class="history-panel" id="historyPanel" aria-label="Calculation History">
+        <div class="history-header">
+          <div class="history-title-group">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <h2 class="history-title">History</h2>
+          </div>
+          <div class="history-actions">
+            <button class="history-btn" id="btnHistoryClear" title="Clear all calculations">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+              <span>Clear</span>
+            </button>
+            <button class="history-close-btn" id="btnHistoryClose" title="Close history panel">&times;</button>
+          </div>
+        </div>
+
+        <div class="history-list" id="historyList">
+          <!-- Populated by JavaScript -->
+        </div>
+      </aside>
+    </main>
+
+    <!-- Keyboard Shortcuts Help Modal -->
+    <div class="modal-backdrop" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3 class="modal-title" id="modalTitle">Keyboard Shortcuts</h3>
+          <button class="modal-close-btn" id="btnInfoClose" aria-label="Close dialog">&times;</button>
+        </div>
+        <div class="modal-body">
+          <table class="shortcuts-table">
+            <tbody>
+              <tr><td><kbd>0</kbd> - <kbd>9</kbd></td><td>Numbers</td></tr>
+              <tr><td><kbd>+</kbd> <kbd>-</kbd> <kbd>*</kbd> <kbd>/</kbd></td><td>Arithmetic (+, −, ×, ÷)</td></tr>
+              <tr><td><kbd>Enter</kbd> or <kbd>=</kbd></td><td>Calculate result</td></tr>
+              <tr><td><kbd>Backspace</kbd></td><td>Delete last character</td></tr>
+              <tr><td><kbd>Escape</kbd></td><td>All Clear (AC)</td></tr>
+              <tr><td><kbd>(</kbd> <kbd>)</kbd></td><td>Parentheses</td></tr>
+              <tr><td><kbd>^</kbd></td><td>Power (xʸ)</td></tr>
+              <tr><td><kbd>!</kbd></td><td>Factorial (n!)</td></tr>
+              <tr><td><kbd>%</kbd></td><td>Percentage</td></tr>
+              <tr><td><kbd>s</kbd> / <kbd>c</kbd> / <kbd>t</kbd></td><td>sin / cos / tan</td></tr>
+              <tr><td><kbd>l</kbd> / <kbd>n</kbd></td><td>log₁₀ / ln</td></tr>
+              <tr><td><kbd>p</kbd> / <kbd>e</kbd></td><td>Constants π / e</td></tr>
+              <tr><td><kbd>d</kbd></td><td>Toggle DEG / RAD mode</td></tr>
+              <tr><td><kbd>h</kbd></td><td>Toggle History sidebar</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="calc-toast" id="calcToast" role="status" aria-live="polite"></div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/engine.js"></script>
+  <script src="js/history.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

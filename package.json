@@ -1,0 +1,18 @@
+{
+  "name": "scientific-calculator",
+  "version": "1.0.0",
+  "description": "Clean, modern, responsive scientific calculator web application with haptics & audio",
+  "main": "js/app.js",
+  "scripts": {
+    "test": "node test/engine-test.js && node test/ui-simulation-test.js && node test/validate-dom.js && node test/full-qa-audit.js"
+  },
+  "keywords": [
+    "calculator",
+    "scientific-calculator",
+    "math",
+    "trigonometry",
+    "web-app"
+  ],
+  "author": "",
+  "license": "MIT"
+}
